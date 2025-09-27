@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital History Adventures</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e1b4b 0%, #581c87 50%, #be185d 100%);
+            min-height: 100vh;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #c084fc;
+        }
+        
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .scene-image {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .scene-image img {
+            width: 320px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+        
+        .scene-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .scene-text {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .name-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .name-section input {
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border: 2px solid #a855f7;
+            border-radius: 8px;
+            width: 250px;
+            max-width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .start-button {
+            background: linear-gradient(90deg, #9333ea 0%, #e11d48 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: inline-block;
+        }
+        
+        .choices {
+            margin-bottom: 20px;
+        }
+        
+        .choice-button {
+            display: block;
+            width: 100%;
+            background: linear-gradient(90deg, #9333ea 0%, #e11d48 100%);
+            color: white;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .choice-button:hover {
+            transform: scale(1.02);
+        }
+        
+        .historical-note {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .historical-note h3 {
+            margin: 0 0 10px 0;
+            color: #fcd34d;
+        }
+        
+        .action-buttons {
+            text-align: center;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .btn-restart { background: #475569; color: white; }
+        .btn-course { background: #059669; color: white; }
+        .btn-editor { background: #ea580c; color: white; }
+        
+        .course-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .course-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .feature {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .course-content {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .course-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .course-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .course-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #a855f7;
+            font-weight: bold;
+        }
+        
+        .admin-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .admin-title {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        
+        .btn-close {
+            background: #dc2626;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .scene-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .scene-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .scene-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .scene-card h4 {
+            margin: 0;
+            font-size: 1rem;
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .scene-card-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .scene-card-icon img {
+            width: 64px;
+            height: 36px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        
+        .scene-preview {
+            color: #d1d5db;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        
+        .scene-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .scene-meta {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+        
+        .btn-edit {
+            background: #9333ea;
+            color: white;
+            padding: 4px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .edit-form {
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #4b5563;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .btn-save {
+            background: #059669;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .btn-cancel {
+            background: #6b7280;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        @media (max-width: 600px) {
+            .title { font-size: 2rem; }
+            .game-card { padding: 20px; }
+            .name-section input { width: 100%; }
+            .scene-image img {
+                width: 280px;
+                height: 158px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Digital History Adventures</h1>
+            <p class="subtitle">Experience pivotal moments in American history through interactive storytelling</p>
+        </div>
+
+        <div class="game-card">
+            <div class="scene-image" id="sceneImage">🏛️</div>
+            <h2 class="scene-title" id="sceneTitle">Welcome to Digital History!</h2>
+            <div class="scene-text" id="sceneText">
+                Step into the shoes of historical figures and experience pivotal moments in American history. What's your name, time traveler?
+            </div>
+
+            <!-- Name Input Section -->
+            <div class="name-section" id="nameSection">
+                <input type="text" id="playerName" placeholder="Enter your name..." maxlength="20">
+                <br>
+                <button class="start-button" id="startButton" onclick="startGame()">Begin Your Journey</button>
+            </div>
+
+            <!-- Choices Section -->
+            <div class="choices" id="choicesSection"></div>
+
+            <!-- Historical Note Section -->
+            <div class="historical-note hidden" id="historicalNote">
+                <h3>📖 Historical Context</h3>
+                <p id="historicalText"></p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-restart" onclick="resetGame()">↻ Restart</button>
+                <button class="btn btn-course" onclick="toggleCourseInfo()">📖 Course Info</button>
+                <button class="btn btn-editor" onclick="toggleAdmin()">⚙️ Content Editor</button>
+            </div>
+        </div>
+
+        <!-- Course Info Panel -->
+        <div class="course-info hidden" id="courseInfo">
+            <h2 class="course-title">🎓 Digital History Course</h2>
+            
+            <div class="features">
+                <div class="feature">
+                    <span class="feature-icon">🕐</span>
+                    <h3>Interactive Learning</h3>
+                    <p>Engage with history through immersive digital experiences</p>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">👥</span>
+                    <h3>Collaborative Research</h3>
+                    <p>Work together on digital history projects and presentations</p>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">📖</span>
+                    <h3>Critical Thinking</h3>
+                    <p>Analyze historical sources and understand cause-and-effect relationships</p>
+                </div>
+            </div>
+
+            <div class="course-content">
+                <h3>What You'll Experience:</h3>
+                <ul class="course-list">
+                    <li>Interactive historical simulations and decision-making scenarios</li>
+                    <li>Digital archive research and primary source analysis</li>
+                    <li>Multimedia storytelling and historical narrative creation</li>
+                    <li>Understanding how technology shapes our interpretation of the past</li>
+                </ul>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <p style="font-size: 1.2rem; color: #c084fc; font-weight: bold;">Ready to explore history in a whole new way?</p>
+                    <p style="color: #d1d5db;">This adventure was just a small taste of what awaits in our Digital History course!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div class="admin-panel hidden" id="adminPanel">
+            <div class="admin-header">
+                <h2 class="admin-title">⚙️ Content Editor</h2>
+                <button class="btn-close" onclick="toggleAdmin()">Close Editor</button>
+            </div>
+            
+            <p style="color: #d1d5db; margin-bottom: 20px;">
+                Select a scene below to edit its content. Changes are saved locally in your browser.
+            </p>
+            
+            <div class="scene-grid" id="sceneGrid"></div>
+            
+            <div class="edit-form hidden" id="editForm">
+                <h3 style="margin-top: 0;">Editing Scene: <span id="editingSceneName"></span></h3>
+                
+                <div class="form-group">
+                    <label>Title:</label>
+                    <input type="text" id="editTitle">
+                </div>
+                
+                <div class="form-group">
+                    <label>Image (Emoji or URL):</label>
+                    <input type="text" id="editImage" placeholder="🏛️ or https://example.com/image.jpg">
+                </div>
+                
+                <div class="form-group">
+                    <label>Scene Text:</label>
+                    <textarea id="editText" rows="4"></textarea>
+                </div>
+                
+                <div class="form-group hidden" id="historicalNoteGroup">
+                    <label>Historical Note:</label>
+                    <textarea id="editHistoricalNote" rows="3"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn-save" onclick="saveScene()">💾 Save Changes</button>
+                    <button class="btn-cancel" onclick="cancelEdit()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state variables
+        let currentScene = 'start';
+        let playerName = '';
+        let editingScene = null;
+
+        // Game scenes data
+        const scenes = {
+            start: {
+                title: "Welcome to Digital History!",
+                image: "🏛️",
+                text: "Step into the shoes of historical figures and experience pivotal moments in American history. What's your name, time traveler?",
+                isNameInput: true
+            },
+            
+            timePortal: {
+                title: "The Time Portal Awaits",
+                image: "🌀",
+                text: "Ready, {playerName}? You stand before a swirling portal of time. Three critical moments in American history beckon. Each choice will test your understanding of historical context and consequences.",
+                choices: [
+                    { text: "1776 - Revolutionary War", action: "revolution" },
+                    { text: "1863 - Civil War", action: "civilwar" },
+                    { text: "1969 - Moon Landing", action: "moonlanding" }
+                ]
+            },
+            
+            revolution: {
+                title: "Valley Forge, Winter 1777-1778",
+                image: "❄️",
+                text: "You are a Continental Army soldier under General Washington. The winter is brutal, supplies are scarce, and morale is at its lowest. Many soldiers are deserting. What do you do?",
+                choices: [
+                    { text: "Stay and endure the hardship for the cause", action: "revolutionStay" },
+                    { text: "Desert and return home to your family", action: "revolutionLeave" },
+                    { text: "Try to rally other soldiers with speeches", action: "revolutionRally" }
+                ]
+            },
+            
+            revolutionStay: {
+                title: "The Patriot's Resolve",
+                image: "🇺🇸",
+                text: "Your decision to stay proved crucial. Though 2,500 soldiers died that winter, the army that emerged was disciplined and united. Your sacrifice contributed to eventual victory at Yorktown. Historical impact: HIGH",
+                isEnding: true,
+                historicalNote: "About 2,000 soldiers deserted Valley Forge, but those who stayed formed the backbone of Washington's eventual victory."
+            },
+            
+            revolutionLeave: {
+                title: "The Deserter's Dilemma",
+                image: "🏠",
+                text: "You return home safely, but news reaches you of the army's transformation at Valley Forge. Many who stayed became heroes of independence. You live with wondering 'what if?' Historical impact: LOW",
+                isEnding: true,
+                historicalNote: "Desertion was common and understandable, but those who endured Valley Forge became the core of America's victory."
+            },
+            
+            revolutionRally: {
+                title: "The Inspirational Leader",
+                image: "📜",
+                text: "Your speeches help maintain morale during the darkest hours. You become a sergeant and help train new recruits using Baron von Steuben's methods. Your leadership saves lives and wins battles. Historical impact: HIGH",
+                isEnding: true,
+                historicalNote: "Leadership at all levels was crucial to the Continental Army's survival and eventual professionalization."
+            },
+            
+            civilwar: {
+                title: "Gettysburg, July 2, 1863",
+                image: "⚔️",
+                text: "You are a Union officer watching Confederate forces position for Pickett's Charge. You have intelligence that could change the battle's outcome. General Meade is nearby. What do you do?",
+                choices: [
+                    { text: "Immediately inform General Meade", action: "civilwarInform" },
+                    { text: "Position your troops defensively first", action: "civilwarDefend" },
+                    { text: "Send scouts to confirm the intelligence", action: "civilwarScout" }
+                ]
+            },
+            
+            civilwarInform: {
+                title: "The Strategic Mind",
+                image: "🎖️",
+                text: "Your quick thinking allows Meade to better position artillery and infantry. Pickett's Charge fails more decisively, shortening the war by months and saving thousands of lives. Historical impact: HIGH",
+                isEnding: true,
+                historicalNote: "Quick decision-making and intelligence sharing were often the difference between victory and defeat in Civil War battles."
+            },
+            
+            civilwarDefend: {
+                title: "The Tactical Officer",
+                image: "🛡️",
+                text: "Your defensive preparations save your regiment, but the delayed intelligence prevents optimal positioning. The battle is won, but at a higher cost in lives. Historical impact: MEDIUM",
+                isEnding: true,
+                historicalNote: "Balancing immediate unit safety with strategic needs was a constant challenge for Civil War officers."
+            },
+            
+            civilwarScout: {
+                title: "The Cautious Commander",
+                image: "🔍",
+                text: "Your scouts confirm the intelligence, but precious time is lost. The battle unfolds as historically recorded. Your caution saved you from potential error but missed an opportunity. Historical impact: LOW",
+                isEnding: true,
+                historicalNote: "The fog of war often forced commanders to act on incomplete information, making boldness sometimes more valuable than caution."
+            },
+            
+            moonlanding: {
+                title: "Mission Control, July 20, 1969",
+                image: "🚀",
+                text: "You're a NASA engineer monitoring Apollo 11's descent. The computer is overloaded with alarms, fuel is running dangerously low, and Neil Armstrong must land manually. What's your advice?",
+                choices: [
+                    { text: "Recommend immediate abort", action: "moonAbort" },
+                    { text: "Trust Armstrong's piloting skills", action: "moonTrust" },
+                    { text: "Guide him to the nearest safe spot", action: "moonGuide" }
+                ]
+            },
+            
+            moonAbort: {
+                title: "The Safety Protocol",
+                image: "⚠️",
+                text: "You follow safety protocols, but Armstrong continues the landing anyway. The mission succeeds, but your overcaution is noted. Sometimes historical moments require calculated risks. Historical impact: LOW",
+                isEnding: true,
+                historicalNote: "The actual mission controllers chose to trust Armstrong's skills, leading to the historic landing with just 25 seconds of fuel remaining."
+            },
+            
+            moonTrust: {
+                title: "The Leap of Faith",
+                image: "🌙",
+                text: "Your confidence in Armstrong proves correct. He lands with seconds to spare, achieving humanity's greatest adventure. Your trust in human skill over caution helped make history. Historical impact: HIGH",
+                isEnding: true,
+                historicalNote: "Mission Control's trust in Armstrong's abilities was crucial to the successful landing that captivated the world."
+            },
+            
+            moonGuide: {
+                title: "The Navigator",
+                image: "🧭",
+                text: "Your guidance helps Armstrong find a safe landing spot, but the drama and achievement feel diminished by over-management. Sometimes heroes need space to make history. Historical impact: MEDIUM",
+                isEnding: true,
+                historicalNote: "The balance between support and independence was crucial in allowing Armstrong to make split-second decisions that ensured success."
+            }
+        };
+
+        // Core game functions
+        function updateScene() {
+            const scene = scenes[currentScene];
+            if (!scene) return;
+
+            // Update image
+            const imageEl = document.getElementById('sceneImage');
+            if (scene.image && (scene.image.startsWith('http') || scene.image.startsWith('data:'))) {
+                imageEl.innerHTML = `<img src="${scene.image}" alt="${scene.title}">`;
+            } else {
+                imageEl.textContent = scene.image;
+            }
+
+            // Update title
+            document.getElementById('sceneTitle').textContent = scene.title;
+
+            // Update text with player name replacement
+            let text = scene.text;
+            if (text.includes('{playerName}')) {
+                text = text.replace('{playerName}', playerName);
+            }
+            document.getElementById('sceneText').textContent = text;
+
+            // Show/hide name input section
+            const nameSection = document.getElementById('nameSection');
+            if (scene.isNameInput) {
+                nameSection.classList.remove('hidden');
+            } else {
+                nameSection.classList.add('hidden');
+            }
+
+            // Update choices section
+            const choicesSection = document.getElementById('choicesSection');
+            choicesSection.innerHTML = '';
+            if (scene.choices && !scene.isNameInput) {
+                scene.choices.forEach(choice => {
+                    const button = document.createElement('button');
+                    button.className = 'choice-button';
+                    button.textContent = choice.text;
+                    button.onclick = () => goToScene(choice.action);
+                    choicesSection.appendChild(button);
+                });
+            }
+
+            // Show/hide historical note
+            const noteEl = document.getElementById('historicalNote');
+            const noteText = document.getElementById('historicalText');
+            if (scene.historicalNote) {
+                noteText.textContent = scene.historicalNote;
+                noteEl.classList.remove('hidden');
+            } else {
+                noteEl.classList.add('hidden');
+            }
+        }
+
+        function goToScene(sceneId) {
+            currentScene = sceneId;
+            updateScene();
+        }
+
+        function startGame() {
+            const nameInput = document.getElementById('playerName');
+            playerName = nameInput.value.trim();
+            if (playerName) {
+                goToScene('timePortal');
+            } else {
+                alert('Please enter your name to begin!');
+                nameInput.focus();
+            }
+        }
+
+        function resetGame() {
+            currentScene = 'start';
+            playerName = '';
+            document.getElementById('playerName').value = '';
+            updateScene();
+            
+            // Hide other panels
+            document.getElementById('courseInfo').classList.add('hidden');
+            document.getElementById('adminPanel').classList.add('hidden');
+            cancelEdit();
+        }
+
+        // UI toggle functions
+        function toggleCourseInfo() {
+            const courseInfo = document.getElementById('courseInfo');
+            if (courseInfo.classList.contains('hidden')) {
+                courseInfo.classList.remove('hidden');
+                // Hide admin panel if open
+                document.getElementById('adminPanel').classList.add('hidden');
+                cancelEdit();
+            } else {
+                courseInfo.classList.add('hidden');
+            }
+        }
+
+        function toggleAdmin() {
+            const adminPanel = document.getElementById('adminPanel');
+            if (adminPanel.classList.contains('hidden')) {
+                adminPanel.classList.remove('hidden');
+                renderSceneGrid();
+                // Hide course info if open
+                document.getElementById('courseInfo').classList.add('hidden');
+            } else {
+                adminPanel.classList.add('hidden');
+                cancelEdit();
+            }
+        }
+
+        // Admin functions
+        function renderSceneGrid() {
+            const grid = document.getElementById('sceneGrid');
+            grid.innerHTML = '';
+            
+            Object.entries(scenes).forEach(([sceneId, scene]) => {
+                const card = document.createElement('div');
+                card.className = 'scene-card';
+                
+                const imageHtml = scene.image && (scene.image.startsWith('http') || scene.image.startsWith('data:')) 
+                    ? `<img src="${scene.image}" alt="${scene.title}">`
+                    : scene.image;
+                
+                card.innerHTML = `
+                    <div class="scene-card-header">
+                        <h4>${scene.title}</h4>
+                        <div class="scene-card-icon">${imageHtml}</div>
+                    </div>
+                    <p class="scene-preview">${scene.text.substring(0, 100)}...</p>
+                    <div class="scene-card-footer">
+                        <span class="scene-meta">${scene.choices ? scene.choices.length + ' choices' : 'Ending scene'}</span>
+                        <button class="btn-edit" onclick="editScene('${sceneId}')">✏️ Edit</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function editScene(sceneId) {
+            editingScene = sceneId;
+            const scene = scenes[sceneId];
+            
+            // Show edit form
+            document.getElementById('editForm').classList.remove('hidden');
+            document.getElementById('editingSceneName').textContent = sceneId;
+            
+            // Populate form
+            document.getElementById('editTitle').value = scene.title;
+            document.getElementById('editImage').value = scene.image;
+            document.getElementById('editText').value = scene.text;
+            
+            // Show/hide historical note field
+            const historicalGroup = document.getElementById('historicalNoteGroup');
+            const historicalNote = document.getElementById('editHistoricalNote');
+            if (scene.historicalNote !== undefined) {
+                historicalGroup.classList.remove('hidden');
+                historicalNote.value = scene.historicalNote || '';
+            } else {
+                historicalGroup.classList.add('hidden');
+            }
+            
+            // Scroll to form
+            document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function saveScene() {
+            if (!editingScene) return;
+            
+            // Get form values
+            const title = document.getElementById('editTitle').value.trim();
+            const image = document.getElementById('editImage').value.trim();
+            const text = document.getElementById('editText').value.trim();
+            const historicalNote = document.getElementById('editHistoricalNote').value.trim();
+            
+            if (!title || !text) {
+                alert('Title and text are required!');
+                return;
+            }
+            
+            // Update scene
+            scenes[editingScene].title = title;
+            scenes[editingScene].image = image;
+            scenes[editingScene].text = text;
+            
+            if (scenes[editingScene].historicalNote !== undefined) {
+                scenes[editingScene].historicalNote = historicalNote;
+            }
+            
+            // Update current scene if we're editing it
+            if (currentScene === editingScene) {
+                updateScene();
+            }
+            
+            // Refresh grid and hide form
+            renderSceneGrid();
+            cancelEdit();
+            
+            alert('Scene updated successfully!');
+        }
+
+        function cancelEdit() {
+            editingScene = null;
+            document.getElementById('editForm').classList.add('hidden');
+        }
+
+        // Initialize when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            updateScene();
+            
+            // Add enter key support for name input
+            document.getElementById('playerName').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    startGame();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
