@@ -531,7 +531,6 @@
             <div class="action-buttons">
                 <button class="btn btn-restart" onclick="resetGame()" id="restartButton">↻ Restart</button>
                 <button class="btn btn-course" onclick="toggleCourseInfo()" id="courseInfoButton">📖 Course Info</button>
-                <button class="btn btn-editor" onclick="toggleAdmin()" id="editorButton">⚙️ Content Editor</button>
             </div>
         </div>
 
@@ -705,29 +704,14 @@
                 </div>
             </div>
         </div>
-
-        <!-- Password Modal -->
-        <div class="password-modal hidden" id="passwordModal">
-            <div class="password-dialog">
-                <h3>Content Editor Access</h3>
-                <p style="color: #d1d5db; margin-bottom: 20px;">Enter password to access editing tools:</p>
-                <input type="password" id="passwordInput" placeholder="Password">
-                <br>
-                <button class="btn-save" onclick="checkPassword()">Submit</button>
-                <button class="btn-cancel" onclick="closePasswordModal()">Cancel</button>
-            </div>
-        </div>
     </div>
 
     <script>
         // Game state variables
         let currentScene = 'start';
         let playerName = '';
-        let editingScene = null;
-        let editorUnlocked = false;
-        const editorPassword = 'admin123'; // Change this to your desired password
 
-        // Editable labels/interface text
+        // Editable labels/interface text (now static)
         const gameLabels = {
             mainTitle: "Digital History Adventures",
             mainSubtitle: "Experience pivotal moments in American history through interactive storytelling",
@@ -736,7 +720,6 @@
             startButton: "Begin Your Journey",
             restartButton: "↻ Restart",
             courseInfoButton: "📖 Course Info",
-            editorButton: "⚙️ Content Editor",
             victoryTitle: "🎉 Mission Accomplished!",
             victoryText: "You've demonstrated the analytical thinking skills central to our Digital History course!",
             historicalContextTitle: "📖 Historical Context",
@@ -1081,10 +1064,8 @@
             document.getElementById('playerName').value = '';
             updateScene();
             
-            // Hide other panels
+            // Hide course info panel
             document.getElementById('courseInfo').classList.add('hidden');
-            document.getElementById('adminPanel').classList.add('hidden');
-            cancelEdit();
         }
 
         // UI toggle functions
@@ -1092,277 +1073,9 @@
             const courseInfo = document.getElementById('courseInfo');
             if (courseInfo.classList.contains('hidden')) {
                 courseInfo.classList.remove('hidden');
-                // Hide admin panel if open
-                document.getElementById('adminPanel').classList.add('hidden');
-                cancelEdit();
             } else {
                 courseInfo.classList.add('hidden');
             }
-        }
-
-        function toggleAdmin() {
-            const adminPanel = document.getElementById('adminPanel');
-            
-            if (adminPanel.classList.contains('hidden')) {
-                // Check if editor is already unlocked
-                if (editorUnlocked) {
-                    openAdminPanel();
-                } else {
-                    // Show password modal
-                    showPasswordModal();
-                }
-            } else {
-                adminPanel.classList.add('hidden');
-                cancelEdit();
-            }
-        }
-
-        function showPasswordModal() {
-            document.getElementById('passwordModal').classList.remove('hidden');
-            document.getElementById('passwordInput').focus();
-        }
-
-        function closePasswordModal() {
-            document.getElementById('passwordModal').classList.add('hidden');
-            document.getElementById('passwordInput').value = '';
-        }
-
-        function checkPassword() {
-            const enteredPassword = document.getElementById('passwordInput').value;
-            if (enteredPassword === editorPassword) {
-                editorUnlocked = true;
-                closePasswordModal();
-                openAdminPanel();
-                alert('Access granted!');
-            } else {
-                alert('Incorrect password. Access denied.');
-                document.getElementById('passwordInput').value = '';
-                document.getElementById('passwordInput').focus();
-            }
-        }
-
-        function openAdminPanel() {
-            const adminPanel = document.getElementById('adminPanel');
-            adminPanel.classList.remove('hidden');
-            showSceneEditor(); // Default to scene editor
-            // Hide course info if open
-            document.getElementById('courseInfo').classList.add('hidden');
-        }
-
-        function showSceneEditor() {
-            document.getElementById('sceneEditor').classList.remove('hidden');
-            document.getElementById('labelEditor').classList.add('hidden');
-            document.getElementById('sceneTabBtn').style.background = '#ea580c';
-            document.getElementById('labelTabBtn').style.background = '#059669';
-            renderSceneGrid();
-            cancelEdit();
-        }
-
-        function showLabelEditor() {
-            document.getElementById('sceneEditor').classList.add('hidden');
-            document.getElementById('labelEditor').classList.remove('hidden');
-            document.getElementById('sceneTabBtn').style.background = '#059669';
-            document.getElementById('labelTabBtn').style.background = '#ea580c';
-            loadLabelsForEditing();
-            cancelEdit();
-        }
-
-        function loadLabelsForEditing() {
-            document.getElementById('editMainTitle').value = gameLabels.mainTitle;
-            document.getElementById('editMainSubtitle').value = gameLabels.mainSubtitle;
-            document.getElementById('editStartButton').value = gameLabels.startButton;
-            document.getElementById('editRestartButton').value = gameLabels.restartButton;
-            document.getElementById('editCourseInfoButton').value = gameLabels.courseInfoButton;
-            document.getElementById('editEditorButton').value = gameLabels.editorButton;
-            document.getElementById('editVictoryTitle').value = gameLabels.victoryTitle;
-            document.getElementById('editVictoryText').value = gameLabels.victoryText;
-            document.getElementById('editHistoricalContextTitle').value = gameLabels.historicalContextTitle;
-            document.getElementById('editCitationsTitle').value = gameLabels.citationsTitle;
-            document.getElementById('editCitationsText').value = gameLabels.citationsText;
-        }
-
-        function saveLabels() {
-            // Update gameLabels object
-            gameLabels.mainTitle = document.getElementById('editMainTitle').value.trim();
-            gameLabels.mainSubtitle = document.getElementById('editMainSubtitle').value.trim();
-            gameLabels.startButton = document.getElementById('editStartButton').value.trim();
-            gameLabels.restartButton = document.getElementById('editRestartButton').value.trim();
-            gameLabels.courseInfoButton = document.getElementById('editCourseInfoButton').value.trim();
-            gameLabels.editorButton = document.getElementById('editEditorButton').value.trim();
-            gameLabels.victoryTitle = document.getElementById('editVictoryTitle').value.trim();
-            gameLabels.victoryText = document.getElementById('editVictoryText').value.trim();
-            gameLabels.historicalContextTitle = document.getElementById('editHistoricalContextTitle').value.trim();
-            gameLabels.citationsTitle = document.getElementById('editCitationsTitle').value.trim();
-            gameLabels.citationsText = document.getElementById('editCitationsText').value.trim();
-
-            // Update the actual interface elements
-            updateInterfaceLabels();
-            
-            alert('Labels updated successfully!');
-        }
-
-        function lockEditor() {
-            editorUnlocked = false;
-            toggleAdmin(); // This will close the panel since editorUnlocked is now false
-            alert('Editor locked. Password will be required for next access.');
-        }
-
-        function updateInterfaceLabels() {
-            document.getElementById('mainTitle').textContent = gameLabels.mainTitle;
-            document.getElementById('mainSubtitle').textContent = gameLabels.mainSubtitle;
-            document.getElementById('gameTitle').textContent = gameLabels.mainTitle;
-            document.getElementById('startButton').textContent = gameLabels.startButton;
-            document.getElementById('restartButton').textContent = gameLabels.restartButton;
-            document.getElementById('courseInfoButton').textContent = gameLabels.courseInfoButton;
-            document.getElementById('editorButton').textContent = gameLabels.editorButton;
-            document.getElementById('victoryTitle').textContent = gameLabels.victoryTitle;
-            document.getElementById('victoryText').textContent = gameLabels.victoryText;
-            document.getElementById('historicalContextTitle').textContent = gameLabels.historicalContextTitle;
-            document.getElementById('playerName').placeholder = gameLabels.namePlaceholder;
-            
-            // Update citations
-            const citationsSection = document.querySelector('#citationsSection h3');
-            const citationsText = document.getElementById('citationsText');
-            if (citationsSection && citationsText) {
-                citationsSection.textContent = gameLabels.citationsTitle;
-                citationsText.textContent = gameLabels.citationsText;
-            }
-        }
-
-        // Admin functions
-        function renderSceneGrid() {
-            const grid = document.getElementById('sceneGrid');
-            grid.innerHTML = '';
-            
-            Object.entries(scenes).forEach(([sceneId, scene]) => {
-                const card = document.createElement('div');
-                card.className = 'scene-card';
-                
-                const imageHtml = scene.image && (scene.image.startsWith('http') || scene.image.startsWith('data:')) 
-                    ? `<img src="${scene.image}" alt="${scene.title}">`
-                    : scene.image;
-                
-                card.innerHTML = `
-                    <div class="scene-card-header">
-                        <h4>${scene.title}</h4>
-                        <div class="scene-card-icon">${imageHtml}</div>
-                    </div>
-                    <p class="scene-preview">${scene.text.substring(0, 100)}...</p>
-                    <div class="scene-card-footer">
-                        <span class="scene-meta">${scene.choices ? scene.choices.length + ' choices' : scene.isVictory ? 'Victory page' : scene.isCourseDetails ? 'Course details' : 'Ending scene'}</span>
-                        <button class="btn-edit" onclick="editScene('${sceneId}')">✏️ Edit</button>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function editScene(sceneId) {
-            editingScene = sceneId;
-            const scene = scenes[sceneId];
-            
-            // Show edit form
-            document.getElementById('editForm').classList.remove('hidden');
-            document.getElementById('editingSceneName').textContent = sceneId;
-            
-            // Populate form
-            document.getElementById('editTitle').value = scene.title;
-            document.getElementById('editImage').value = scene.image;
-            document.getElementById('editText').value = scene.text;
-            document.getElementById('editCitations').value = scene.citations || '';
-            
-            // Show/hide historical note field
-            const historicalGroup = document.getElementById('historicalNoteGroup');
-            const historicalNote = document.getElementById('editHistoricalNote');
-            if (scene.historicalNote !== undefined) {
-                historicalGroup.classList.remove('hidden');
-                historicalNote.value = scene.historicalNote || '';
-            } else {
-                historicalGroup.classList.add('hidden');
-            }
-            
-            // Show/hide choices editor
-            const choicesGroup = document.getElementById('choicesGroup');
-            const choicesEditor = document.getElementById('choicesEditor');
-            if (scene.choices && scene.choices.length > 0) {
-                choicesGroup.classList.remove('hidden');
-                renderChoicesEditor(scene.choices);
-            } else {
-                choicesGroup.classList.add('hidden');
-            }
-            
-            // Scroll to form
-            document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function renderChoicesEditor(choices) {
-            const editor = document.getElementById('choicesEditor');
-            editor.innerHTML = '';
-            
-            choices.forEach((choice, index) => {
-                const choiceDiv = document.createElement('div');
-                choiceDiv.style.marginBottom = '10px';
-                choiceDiv.innerHTML = `
-                    <label style="font-size: 0.9rem; margin-bottom: 3px; display: block;">Button ${index + 1}:</label>
-                    <input type="text" 
-                           value="${choice.text}" 
-                           id="choice${index}" 
-                           style="width: 100%; padding: 6px; border: 1px solid #4b5563; border-radius: 4px; background: rgba(0,0,0,0.3); color: white; box-sizing: border-box;">
-                `;
-                editor.appendChild(choiceDiv);
-            });
-        }
-
-        function saveScene() {
-            if (!editingScene) return;
-            
-            // Get form values
-            const title = document.getElementById('editTitle').value.trim();
-            const image = document.getElementById('editImage').value.trim();
-            const text = document.getElementById('editText').value.trim();
-            const historicalNote = document.getElementById('editHistoricalNote').value.trim();
-            const citations = document.getElementById('editCitations').value.trim();
-            
-            if (!title || !text) {
-                alert('Title and text are required!');
-                return;
-            }
-            
-            // Update scene
-            scenes[editingScene].title = title;
-            scenes[editingScene].image = image;
-            scenes[editingScene].text = text;
-            scenes[editingScene].citations = citations;
-            
-            if (scenes[editingScene].historicalNote !== undefined) {
-                scenes[editingScene].historicalNote = historicalNote;
-            }
-            
-            // Update choice button texts if they exist
-            if (scenes[editingScene].choices) {
-                scenes[editingScene].choices.forEach((choice, index) => {
-                    const choiceInput = document.getElementById(`choice${index}`);
-                    if (choiceInput) {
-                        choice.text = choiceInput.value.trim();
-                    }
-                });
-            }
-            
-            // Update current scene if we're editing it
-            if (currentScene === editingScene) {
-                updateScene();
-            }
-            
-            // Refresh grid and hide form
-            renderSceneGrid();
-            cancelEdit();
-            
-            alert('Scene updated successfully!');
-        }
-
-        function cancelEdit() {
-            editingScene = null;
-            document.getElementById('editForm').classList.add('hidden');
         }
 
         // Initialize when page loads
@@ -1373,13 +1086,6 @@
             document.getElementById('playerName').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     startGame();
-                }
-            });
-
-            // Add enter key support for password input
-            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    checkPassword();
                 }
             });
         });
