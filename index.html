@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital History Adventures</title>
+    <title>Playing In The Past</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -478,14 +478,14 @@
 <body>
     <div class="container">
         <div class="header" style="display: none;">
-            <h1 class="title" id="mainTitle">Digital History Adventures</h1>
+            <h1 class="title" id="mainTitle">Playing In The Past</h1>
             <p class="subtitle" id="mainSubtitle">Experience pivotal moments in American history through interactive storytelling</p>
         </div>
 
         <div class="game-card">
-            <h1 class="title" id="gameTitle" style="text-align: center; margin-bottom: 20px;">Digital History Adventures</h1>
+            <h1 class="title" id="gameTitle" style="text-align: center; margin-bottom: 20px;">Playing In The Past</h1>
             <div class="scene-image" id="sceneImage">🏛️</div>
-            <h2 class="scene-title" id="sceneTitle">Welcome to Digital History!</h2>
+            <h2 class="scene-title" id="sceneTitle">What is your name scholar?</h2>
             <div class="scene-text" id="sceneText">
                 Step into the shoes of historical figures and experience pivotal moments in American history. What's your name, time traveler?
             </div>
@@ -509,7 +509,7 @@
             <!-- Victory Section -->
             <div class="victory-section hidden" id="victorySection">
                 <h3 id="victoryTitle">🎉 Mission Accomplished!</h3>
-                <p id="victoryText">You've demonstrated the analytical thinking skills central to our Digital History course!</p>
+                <p id="victoryText">This was just a brief window into the kinds of narratives you might be able to make within the course.</p>
             </div>
 
             <!-- Course Details Section -->
@@ -720,18 +720,18 @@
             startButton: "Begin Your Journey",
             restartButton: "↻ Restart",
             courseInfoButton: "📖 Course Info",
-            victoryTitle: "🎉 Mission Accomplished!",
-            victoryText: "You've demonstrated the analytical thinking skills central to our Digital History course!",
+            victoryTitle: "The Trip Is Complete",
+            victoryText: "You've made it back to the baseline anomalaly. I've hope you learned a little bit about the past, and understood the nature of what these kinds of narratives could do for you.",
             historicalContextTitle: "📖 Historical Context",
             citationsTitle: "📚 Sources & Citations",
-            citationsText: "Historical information compiled from multiple academic sources including National Archives, Library of Congress, and peer-reviewed historical journals."
+            citationsText: ""
         };
 
         // Game scenes data
         const scenes = {
             start: {
-                title: "Welcome to Digital History!",
-                image: "🏛️",
+                title: "What is your name scholar?",
+                image: "https://davidsbennett.github.io/DigitalMediaHistory/Images/digitalhistory.jpg",
                 text: "Step into the shoes of historical figures and experience pivotal moments in American history. What's your name, time traveler?",
                 isNameInput: true
             },
