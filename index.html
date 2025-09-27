@@ -4,31 +4,470 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital History Adventures - Interactive Course Preview</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #1e1b4b 0%, #581c87 50%, #be185d 100%);
+            min-height: 100vh;
+            color: white;
         }
-        .animate-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
         }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-shadow: 0 10px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.25rem;
+            color: #c084fc;
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+        
+        .game-area {
+            max-width: 64rem;
+            margin: 0 auto;
+        }
+        
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .scene-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .scene-image {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .scene-image img {
+            width: 20rem;
+            height: 20rem;
+            object-fit: cover;
+            border-radius: 1rem;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: pulse 2s infinite;
+        }
+        
+        .scene-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .scene-text {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: #f3f4f6;
+        }
+        
+        .name-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .name-input input {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 2px solid #a855f7;
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #1f2937;
+            min-width: 16rem;
+            outline: none;
+        }
+        
+        .name-input input:focus {
+            border-color: #8b5cf6;
+        }
+        
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .choice-button {
+            width: 100%;
+            background: linear-gradient(90deg, #9333ea 0%, #e11d48 100%);
+            color: white;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+        }
+        
+        .choice-button:hover {
+            background: linear-gradient(90deg, #7c3aed 0%, #be123c 100%);
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-button {
+            background: linear-gradient(90deg, #9333ea 0%, #e11d48 100%);
+            color: white;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .action-button:hover {
+            background: linear-gradient(90deg, #7c3aed 0%, #be123c 100%);
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .historical-note {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .historical-note h3 {
+            color: #fcd34d;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .historical-note p {
+            color: #fef3c7;
+            font-size: 0.875rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .btn-restart {
+            background: #475569;
+            color: white;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-restart:hover {
+            background: #334155;
+        }
+        
+        .btn-course {
+            background: #059669;
+            color: white;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-course:hover {
+            background: #047857;
+        }
+        
+        .btn-editor {
+            background: #ea580c;
+            color: white;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-editor:hover {
+            background: #c2410c;
+        }
+        
+        .course-info {
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .course-title {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.75rem;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin: 0 auto 0.5rem;
+            display: block;
+        }
+        
+        .feature h3 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .feature p {
+            font-size: 0.875rem;
+            color: #d1d5db;
+        }
+        
+        .course-content {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+        
+        .course-content h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .course-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .course-list li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+            color: #d1d5db;
+        }
+        
+        .course-list li::before {
+            content: "•";
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .course-list li:nth-child(1)::before { color: #a855f7; }
+        .course-list li:nth-child(2)::before { color: #ec4899; }
+        .course-list li:nth-child(3)::before { color: #06b6d4; }
+        .course-list li:nth-child(4)::before { color: #f59e0b; }
+        
+        .course-cta {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .course-cta p:first-child {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #c084fc;
+        }
+        
+        .course-cta p:last-child {
+            color: #d1d5db;
+            margin-top: 0.5rem;
+        }
+        
+        .admin-panel {
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .admin-title {
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .btn-close {
+            background: #dc2626;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-close:hover {
+            background: #b91c1c;
+        }
+        
+        .scene-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        
+        .scene-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .scene-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .scene-card h4 {
+            font-weight: 500;
+            flex: 1;
+            margin-right: 0.5rem;
+        }
+        
+        .scene-card-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+        
+        .scene-card-icon img {
+            width: 3rem;
+            height: 3rem;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        
+        .scene-preview {
+            color: #d1d5db;
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .scene-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .scene-meta {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+        
+        .btn-edit {
+            background: #9333ea;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .btn-edit:hover {
+            background: #7c3aed;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
         @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: .5;
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
-        .animate-in {
-            animation: slideInFromBottom 0.5s ease-out;
-        }
-        @keyframes slideInFromBottom {
+        
+        @keyframes slideIn {
             from {
                 opacity: 0;
                 transform: translateY(20px);
@@ -38,522 +477,381 @@
                 transform: translateY(0);
             }
         }
-        .group:hover .group-hover\:translate-x-1 {
-            transform: translateX(0.25rem);
-        }
-        .group:hover .group-hover\:scale-105 {
-            transform: scale(1.05);
-        }
-        .hover\:scale-105:hover {
-            transform: scale(1.05);
-        }
-        .transition-all {
-            transition: all 0.3s;
-        }
-        .transition-transform {
-            transition: transform 0.3s;
-        }
-        .transition-colors {
-            transition: color 0.3s, background-color 0.3s;
-        }
-        .backdrop-blur-lg {
-            backdrop-filter: blur(16px);
-        }
-        .drop-shadow-lg {
-            filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
-        }
-        .line-clamp-2 {
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-        }
-        .resize-vertical {
-            resize: vertical;
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .scene-image {
+                font-size: 4rem;
+            }
+            
+            .scene-image img {
+                width: 16rem;
+                height: 16rem;
+            }
+            
+            .name-input {
+                flex-direction: column;
+            }
+            
+            .name-input input {
+                min-width: auto;
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="title">Digital History Adventures</h1>
+            <p class="subtitle">Experience pivotal moments in American history through interactive storytelling</p>
+        </div>
 
-    <script type="text/babel">
-        const { useState } = React;
-        const { ChevronRight, RotateCcw, BookOpen, Clock, Users, Settings, Save, Eye, Edit3 } = lucide;
+        <!-- Main Game Area -->
+        <div class="game-area">
+            <div class="game-card">
+                <!-- Scene Header -->
+                <div class="scene-header">
+                    <div class="scene-image" id="sceneImage">🏛️</div>
+                    <h2 class="scene-title" id="sceneTitle">Welcome to Digital History!</h2>
+                </div>
 
-        const HistoryAdventureGame = () => {
-            const [currentScene, setCurrentScene] = useState('start');
-            const [playerName, setPlayerName] = useState('');
-            const [showCourseInfo, setShowCourseInfo] = useState(false);
-            const [showAdmin, setShowAdmin] = useState(false);
-            const [editingScene, setEditingScene] = useState(null);
+                <!-- Scene Text -->
+                <div class="scene-text" id="sceneText">
+                    Step into the shoes of historical figures and experience pivotal moments in American history. What's your name, time traveler?
+                </div>
 
-            const [scenes, setScenes] = useState({
-                start: {
-                    title: "Welcome to Digital History!",
-                    image: "🏛️",
-                    text: "Step into the shoes of historical figures and experience pivotal moments in American history. What's your name, time traveler?",
-                    isNameInput: true,
-                    choices: [
-                        { text: "Begin Your Journey", action: () => setCurrentScene('timePortal') }
-                    ]
-                },
+                <!-- Name Input -->
+                <div class="name-input" id="nameInput">
+                    <input type="text" id="playerName" placeholder="Enter your name..." maxlength="20">
+                </div>
+
+                <!-- Choices -->
+                <div class="choices" id="choices"></div>
+
+                <!-- Action Button -->
+                <div id="actionButton" style="text-align: center; margin-bottom: 1.5rem;" class="hidden">
+                    <button class="action-button" onclick="startGame()">Begin Your Journey</button>
+                </div>
+
+                <!-- Historical Note -->
+                <div class="historical-note hidden" id="historicalNote">
+                    <h3>📖 Historical Context</h3>
+                    <p id="historicalText"></p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-restart" onclick="resetGame()">
+                        ↻ Restart Adventure
+                    </button>
+                    <button class="btn-course" onclick="toggleCourseInfo()">
+                        📖 Learn More About Our Course
+                    </button>
+                    <button class="btn-editor" onclick="toggleAdmin()">
+                        ⚙️ Content Editor
+                    </button>
+                </div>
+            </div>
+
+            <!-- Course Information Panel -->
+            <div class="course-info hidden" id="courseInfo">
+                <h2 class="course-title">🎓 Digital History Course</h2>
                 
-                timePortal: {
-                    title: "The Time Portal Awaits",
-                    image: "🌀",
-                    text: `Ready, ${playerName}? You stand before a swirling portal of time. Three critical moments in American history beckon. Each choice will test your understanding of historical context and consequences.`,
-                    choices: [
-                        { text: "1776 - Revolutionary War", action: () => setCurrentScene('revolution') },
-                        { text: "1863 - Civil War", action: () => setCurrentScene('civilwar') },
-                        { text: "1969 - Moon Landing", action: () => setCurrentScene('moonlanding') }
-                    ]
-                },
-                
-                revolution: {
-                    title: "Valley Forge, Winter 1777-1778",
-                    image: "❄️",
-                    text: "You are a Continental Army soldier under General Washington. The winter is brutal, supplies are scarce, and morale is at its lowest. Many soldiers are deserting. What do you do?",
-                    choices: [
-                        { text: "Stay and endure the hardship for the cause", action: () => setCurrentScene('revolutionStay') },
-                        { text: "Desert and return home to your family", action: () => setCurrentScene('revolutionLeave') },
-                        { text: "Try to rally other soldiers with speeches", action: () => setCurrentScene('revolutionRally') }
-                    ]
-                },
-                
-                revolutionStay: {
-                    title: "The Patriot's Resolve",
-                    image: "🇺🇸",
-                    text: "Your decision to stay proved crucial. Though 2,500 soldiers died that winter, the army that emerged was disciplined and united. Your sacrifice contributed to eventual victory at Yorktown. Historical impact: HIGH",
-                    isEnding: true,
-                    historicalNote: "About 2,000 soldiers deserted Valley Forge, but those who stayed formed the backbone of Washington's eventual victory."
-                },
-                
-                revolutionLeave: {
-                    title: "The Deserter's Dilemma",
-                    image: "🏠",
-                    text: "You return home safely, but news reaches you of the army's transformation at Valley Forge. Many who stayed became heroes of independence. You live with wondering 'what if?' Historical impact: LOW",
-                    isEnding: true,
-                    historicalNote: "Desertion was common and understandable, but those who endured Valley Forge became the core of America's victory."
-                },
-                
-                revolutionRally: {
-                    title: "The Inspirational Leader",
-                    image: "📜",
-                    text: "Your speeches help maintain morale during the darkest hours. You become a sergeant and help train new recruits using Baron von Steuben's methods. Your leadership saves lives and wins battles. Historical impact: HIGH",
-                    isEnding: true,
-                    historicalNote: "Leadership at all levels was crucial to the Continental Army's survival and eventual professionalization."
-                },
-                
-                civilwar: {
-                    title: "Gettysburg, July 2, 1863",
-                    image: "⚔️",
-                    text: "You are a Union officer watching Confederate forces position for Pickett's Charge. You have intelligence that could change the battle's outcome. General Meade is nearby. What do you do?",
-                    choices: [
-                        { text: "Immediately inform General Meade", action: () => setCurrentScene('civilwarInform') },
-                        { text: "Position your troops defensively first", action: () => setCurrentScene('civilwarDefend') },
-                        { text: "Send scouts to confirm the intelligence", action: () => setCurrentScene('civilwarScout') }
-                    ]
-                },
-                
-                civilwarInform: {
-                    title: "The Strategic Mind",
-                    image: "🎖️",
-                    text: "Your quick thinking allows Meade to better position artillery and infantry. Pickett's Charge fails more decisively, shortening the war by months and saving thousands of lives. Historical impact: HIGH",
-                    isEnding: true,
-                    historicalNote: "Quick decision-making and intelligence sharing were often the difference between victory and defeat in Civil War battles."
-                },
-                
-                civilwarDefend: {
-                    title: "The Tactical Officer",
-                    image: "🛡️",
-                    text: "Your defensive preparations save your regiment, but the delayed intelligence prevents optimal positioning. The battle is won, but at a higher cost in lives. Historical impact: MEDIUM",
-                    isEnding: true,
-                    historicalNote: "Balancing immediate unit safety with strategic needs was a constant challenge for Civil War officers."
-                },
-                
-                civilwarScout: {
-                    title: "The Cautious Commander",
-                    image: "🔍",
-                    text: "Your scouts confirm the intelligence, but precious time is lost. The battle unfolds as historically recorded. Your caution saved you from potential error but missed an opportunity. Historical impact: LOW",
-                    isEnding: true,
-                    historicalNote: "The fog of war often forced commanders to act on incomplete information, making boldness sometimes more valuable than caution."
-                },
-                
-                moonlanding: {
-                    title: "Mission Control, July 20, 1969",
-                    image: "🚀",
-                    text: "You're a NASA engineer monitoring Apollo 11's descent. The computer is overloaded with alarms, fuel is running dangerously low, and Neil Armstrong must land manually. What's your advice?",
-                    choices: [
-                        { text: "Recommend immediate abort", action: () => setCurrentScene('moonAbort') },
-                        { text: "Trust Armstrong's piloting skills", action: () => setCurrentScene('moonTrust') },
-                        { text: "Guide him to the nearest safe spot", action: () => setCurrentScene('moonGuide') }
-                    ]
-                },
-                
-                moonAbort: {
-                    title: "The Safety Protocol",
-                    image: "⚠️",
-                    text: "You follow safety protocols, but Armstrong continues the landing anyway. The mission succeeds, but your overcaution is noted. Sometimes historical moments require calculated risks. Historical impact: LOW",
-                    isEnding: true,
-                    historicalNote: "The actual mission controllers chose to trust Armstrong's skills, leading to the historic landing with just 25 seconds of fuel remaining."
-                },
-                
-                moonTrust: {
-                    title: "The Leap of Faith",
-                    image: "🌙",
-                    text: "Your confidence in Armstrong proves correct. He lands with seconds to spare, achieving humanity's greatest adventure. Your trust in human skill over caution helped make history. Historical impact: HIGH",
-                    isEnding: true,
-                    historicalNote: "Mission Control's trust in Armstrong's abilities was crucial to the successful landing that captivated the world."
-                },
-                
-                moonGuide: {
-                    title: "The Navigator",
-                    image: "🧭",
-                    text: "Your guidance helps Armstrong find a safe landing spot, but the drama and achievement feel diminished by over-management. Sometimes heroes need space to make history. Historical impact: MEDIUM",
-                    isEnding: true,
-                    historicalNote: "The balance between support and independence was crucial in allowing Armstrong to make split-second decisions that ensured success."
-                }
-            });
+                <div class="features">
+                    <div class="feature">
+                        <span class="feature-icon">🕐</span>
+                        <h3>Interactive Learning</h3>
+                        <p>Engage with history through immersive digital experiences</p>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">👥</span>
+                        <h3>Collaborative Research</h3>
+                        <p>Work together on digital history projects and presentations</p>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📖</span>
+                        <h3>Critical Thinking</h3>
+                        <p>Analyze historical sources and understand cause-and-effect relationships</p>
+                    </div>
+                </div>
 
-            const currentSceneData = scenes[currentScene];
+                <div class="course-content">
+                    <h3>What You'll Experience:</h3>
+                    <ul class="course-list">
+                        <li>Interactive historical simulations and decision-making scenarios</li>
+                        <li>Digital archive research and primary source analysis</li>
+                        <li>Multimedia storytelling and historical narrative creation</li>
+                        <li>Understanding how technology shapes our interpretation of the past</li>
+                    </ul>
+                    
+                    <div class="course-cta">
+                        <p>Ready to explore history in a whole new way?</p>
+                        <p>This adventure was just a small taste of what awaits in our Digital History course!</p>
+                    </div>
+                </div>
+            </div>
 
-            const resetGame = () => {
-                setCurrentScene('start');
-                setPlayerName('');
-                setShowCourseInfo(false);
-            };
+            <!-- Admin Panel -->
+            <div class="admin-panel hidden" id="adminPanel">
+                <div class="admin-header">
+                    <h2 class="admin-title">
+                        ⚙️ Content Editor
+                    </h2>
+                    <button class="btn-close" onclick="toggleAdmin()">Close Editor</button>
+                </div>
+                
+                <p style="color: #d1d5db; margin-bottom: 1rem;">
+                    Select a scene below to edit its content. This is a simplified editor - for full editing capabilities, use the React version.
+                </p>
+                
+                <div class="scene-grid" id="sceneGrid"></div>
+            </div>
+        </div>
+    </div>
 
-            const updateScene = (sceneId, updatedData) => {
-                setScenes(prev => ({
-                    ...prev,
-                    [sceneId]: {
-                        ...prev[sceneId],
-                        ...updatedData
-                    }
-                }));
-            };
+    <script>
+        // Game State
+        let currentScene = 'start';
+        let playerName = '';
+        let showCourseInfo = false;
+        let showAdmin = false;
 
-            const AdminPanel = () => {
-                const [tempSceneData, setTempSceneData] = useState({});
-
-                const handleEditScene = (sceneId) => {
-                    setEditingScene(sceneId);
-                    setTempSceneData({ ...scenes[sceneId] });
-                };
-
-                const handleSaveScene = () => {
-                    if (editingScene) {
-                        updateScene(editingScene, tempSceneData);
-                        setEditingScene(null);
-                        setTempSceneData({});
-                    }
-                };
-
-                const handleCancelEdit = () => {
-                    setEditingScene(null);
-                    setTempSceneData({});
-                };
-
-                const updateTempData = (field, value) => {
-                    setTempSceneData(prev => ({
-                        ...prev,
-                        [field]: value
-                    }));
-                };
-
-                const updateChoice = (index, field, value) => {
-                    const newChoices = [...(tempSceneData.choices || [])];
-                    newChoices[index] = {
-                        ...newChoices[index],
-                        [field]: value
-                    };
-                    setTempSceneData(prev => ({
-                        ...prev,
-                        choices: newChoices
-                    }));
-                };
-
-                return React.createElement('div', { className: "mt-8 bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 p-8 shadow-2xl" },
-                    React.createElement('div', { className: "flex items-center justify-between mb-6" },
-                        React.createElement('h2', { className: "text-3xl font-bold text-white flex items-center" },
-                            React.createElement(Settings, { className: "w-8 h-8 mr-3" }),
-                            "Content Editor"
-                        ),
-                        React.createElement('button', {
-                            onClick: () => setShowAdmin(false),
-                            className: "bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
-                        }, "Close Editor")
-                    ),
-                    editingScene ? React.createElement('div', { className: "space-y-6" },
-                        React.createElement('div', { className: "flex items-center justify-between" },
-                            React.createElement('h3', { className: "text-2xl font-semibold text-white" }, `Editing: ${editingScene}`),
-                            React.createElement('div', { className: "flex gap-2" },
-                                React.createElement('button', {
-                                    onClick: handleSaveScene,
-                                    className: "flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
-                                },
-                                    React.createElement(Save, { className: "w-4 h-4" }),
-                                    "Save Changes"
-                                ),
-                                React.createElement('button', {
-                                    onClick: handleCancelEdit,
-                                    className: "bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
-                                }, "Cancel")
-                            )
-                        ),
-                        React.createElement('div', { className: "grid md:grid-cols-2 gap-6" },
-                            React.createElement('div', null,
-                                React.createElement('label', { className: "block text-white font-medium mb-2" }, "Title"),
-                                React.createElement('input', {
-                                    type: "text",
-                                    value: tempSceneData.title || '',
-                                    onChange: (e) => updateTempData('title', e.target.value),
-                                    className: "w-full px-3 py-2 bg-black/30 border border-white/20 rounded-lg text-white focus:outline-none focus:border-purple-400"
-                                })
-                            ),
-                            React.createElement('div', null,
-                                React.createElement('label', { className: "block text-white font-medium mb-2" }, "Image (Emoji or URL)"),
-                                React.createElement('input', {
-                                    type: "text",
-                                    value: tempSceneData.image || '',
-                                    onChange: (e) => updateTempData('image', e.target.value),
-                                    className: "w-full px-3 py-2 bg-black/30 border border-white/20 rounded-lg text-white focus:outline-none focus:border-purple-400",
-                                    placeholder: "🏛️ or https://example.com/image.jpg"
-                                }),
-                                React.createElement('div', { className: "mt-2 text-center" },
-                                    tempSceneData.image && (tempSceneData.image.startsWith('http') || tempSceneData.image.startsWith('data:')) ?
-                                        React.createElement('img', {
-                                            src: tempSceneData.image,
-                                            alt: "Preview",
-                                            className: "w-32 h-32 object-cover rounded-lg mx-auto border border-white/20",
-                                            onError: (e) => {
-                                                e.target.style.display = 'none';
-                                                e.target.nextSibling.style.display = 'block';
-                                            }
-                                        }) :
-                                        tempSceneData.image ? React.createElement('div', { className: "text-4xl" }, tempSceneData.image) : null,
-                                    React.createElement('div', { className: "text-red-400 text-sm hidden" }, "Image failed to load")
-                                )
-                            )
-                        ),
-                        React.createElement('div', null,
-                            React.createElement('label', { className: "block text-white font-medium mb-2" }, "Scene Text"),
-                            React.createElement('textarea', {
-                                value: tempSceneData.text || '',
-                                onChange: (e) => updateTempData('text', e.target.value),
-                                rows: 4,
-                                className: "w-full px-3 py-2 bg-black/30 border border-white/20 rounded-lg text-white focus:outline-none focus:border-purple-400 resize-vertical"
-                            })
-                        ),
-                        tempSceneData.historicalNote !== undefined && React.createElement('div', null,
-                            React.createElement('label', { className: "block text-white font-medium mb-2" }, "Historical Note"),
-                            React.createElement('textarea', {
-                                value: tempSceneData.historicalNote || '',
-                                onChange: (e) => updateTempData('historicalNote', e.target.value),
-                                rows: 3,
-                                className: "w-full px-3 py-2 bg-black/30 border border-white/20 rounded-lg text-white focus:outline-none focus:border-purple-400 resize-vertical"
-                            })
-                        ),
-                        tempSceneData.choices && React.createElement('div', null,
-                            React.createElement('label', { className: "block text-white font-medium mb-4" }, "Choices"),
-                            React.createElement('div', { className: "space-y-3" },
-                                tempSceneData.choices.map((choice, index) =>
-                                    React.createElement('div', { key: index, className: "bg-black/30 p-4 rounded-lg" },
-                                        React.createElement('label', { className: "block text-gray-300 text-sm mb-1" }, `Choice ${index + 1} Text`),
-                                        React.createElement('input', {
-                                            type: "text",
-                                            value: choice.text || '',
-                                            onChange: (e) => updateChoice(index, 'text', e.target.value),
-                                            className: "w-full px-3 py-2 bg-black/40 border border-white/20 rounded text-white focus:outline-none focus:border-purple-400"
-                                        })
-                                    )
-                                )
-                            )
-                        )
-                    ) : React.createElement('div', { className: "grid gap-4" },
-                        React.createElement('p', { className: "text-gray-300 mb-4" }, "Select a scene to edit its content. Changes are saved locally in your browser session."),
-                        React.createElement('div', { className: "grid md:grid-cols-2 lg:grid-cols-3 gap-4" },
-                            Object.entries(scenes).map(([sceneId, scene]) =>
-                                React.createElement('div', { key: sceneId, className: "bg-black/30 p-4 rounded-lg border border-white/10" },
-                                    React.createElement('div', { className: "flex items-center justify-between mb-2" },
-                                        React.createElement('h4', { className: "text-white font-medium truncate pr-2" }, scene.title),
-                                        React.createElement('div', { className: "flex-shrink-0" },
-                                            scene.image && (scene.image.startsWith('http') || scene.image.startsWith('data:')) ?
-                                                React.createElement('img', {
-                                                    src: scene.image,
-                                                    alt: scene.title,
-                                                    className: "w-16 h-16 object-cover rounded-lg",
-                                                    onError: (e) => {
-                                                        e.target.style.display = 'none';
-                                                        e.target.nextSibling.style.display = 'block';
-                                                    }
-                                                }) :
-                                                React.createElement('span', { className: "text-3xl" }, scene.image),
-                                            React.createElement('span', { className: "text-3xl hidden" }, "🖼️")
-                                        )
-                                    ),
-                                    React.createElement('p', { className: "text-gray-300 text-sm mb-3 line-clamp-2" }, scene.text.substring(0, 80) + "..."),
-                                    React.createElement('div', { className: "flex justify-between items-center" },
-                                        React.createElement('span', { className: "text-xs text-gray-400" },
-                                            scene.choices ? `${scene.choices.length} choices` : 'Ending scene'
-                                        ),
-                                        React.createElement('button', {
-                                            onClick: () => handleEditScene(sceneId),
-                                            className: "flex items-center gap-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm transition-colors"
-                                        },
-                                            React.createElement(Edit3, { className: "w-3 h-3" }),
-                                            "Edit"
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                );
-            };
-
-            return React.createElement('div', { className: "min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800" },
-                React.createElement('div', { className: "container mx-auto px-4 py-8" },
-                    React.createElement('div', { className: "text-center mb-8" },
-                        React.createElement('h1', { className: "text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg" }, "Digital History Adventures"),
-                        React.createElement('p', { className: "text-xl text-purple-200 max-w-2xl mx-auto" }, "Experience pivotal moments in American history through interactive storytelling")
-                    ),
-                    React.createElement('div', { className: "max-w-4xl mx-auto" },
-                        React.createElement('div', { className: "bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 p-8 shadow-2xl" },
-                            React.createElement('div', { className: "text-center mb-6" },
-                                React.createElement('div', { className: "mb-4" },
-                                    currentSceneData.image && (currentSceneData.image.startsWith('http') || currentSceneData.image.startsWith('data:')) ?
-                                        React.createElement('img', {
-                                            src: currentSceneData.image,
-                                            alt: currentSceneData.title,
-                                            className: "w-80 h-80 md:w-96 md:h-96 object-cover rounded-2xl mx-auto shadow-2xl animate-pulse",
-                                            onError: (e) => {
-                                                e.target.style.display = 'none';
-                                                e.target.nextSibling.style.display = 'block';
-                                            }
-                                        }) :
-                                        React.createElement('div', { className: "text-8xl animate-pulse" }, currentSceneData.image),
-                                    React.createElement('div', { className: "text-8xl animate-pulse hidden" }, "🏛️")
-                                ),
-                                React.createElement('h2', { className: "text-3xl font-bold text-white mb-4" }, currentSceneData.title)
-                            ),
-                            React.createElement('div', { className: "bg-black/20 rounded-xl p-6 mb-6" },
-                                React.createElement('p', { className: "text-lg text-gray-100 leading-relaxed" }, currentSceneData.text)
-                            ),
-                            currentSceneData.isNameInput && React.createElement('div', { className: "mb-6" },
-                                React.createElement('div', { className: "flex flex-col sm:flex-row gap-4 items-center justify-center" },
-                                    React.createElement('input', {
-                                        type: "text",
-                                        value: playerName,
-                                        onChange: (e) => setPlayerName(e.target.value),
-                                        onKeyPress: (e) => e.key === 'Enter' && playerName.trim() && setCurrentScene('timePortal'),
-                                        placeholder: "Enter your name...",
-                                        className: "px-4 py-3 rounded-lg text-gray-900 text-lg font-medium border-2 border-purple-300 focus:border-purple-500 focus:outline-none min-w-64",
-                                        maxLength: 20
-                                    })
-                                )
-                            ),
-                            !currentSceneData.isNameInput && React.createElement('div', { className: "space-y-4 mb-6" },
-                                currentSceneData.choices?.map((choice, index) =>
-                                    React.createElement('button', {
-                                        key: index,
-                                        onClick: choice.action,
-                                        className: "w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-between group"
-                                    },
-                                        React.createElement('span', { className: "text-left" }, choice.text),
-                                        React.createElement(ChevronRight, { className: "w-5 h-5 group-hover:translate-x-1 transition-transform" })
-                                    )
-                                )
-                            ),
-                            currentSceneData.isNameInput && playerName.trim() && React.createElement('div', { className: "text-center" },
-                                React.createElement('button', {
-                                    onClick: () => setCurrentScene('timePortal'),
-                                    className: "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-                                }, "Begin Your Journey")
-                            ),
-                            currentSceneData.isEnding && currentSceneData.historicalNote && React.createElement('div', { className: "bg-amber-500/20 border border-amber-500/30 rounded-xl p-4 mb-6" },
-                                React.createElement('h3', { className: "text-amber-300 font-semibold mb-2 flex items-center" },
-                                    React.createElement(BookOpen, { className: "w-5 h-5 mr-2" }),
-                                    "Historical Context"
-                                ),
-                                React.createElement('p', { className: "text-amber-100 text-sm" }, currentSceneData.historicalNote)
-                            ),
-                            React.createElement('div', { className: "flex flex-wrap gap-4 justify-center" },
-                                React.createElement('button', {
-                                    onClick: resetGame,
-                                    className: "flex items-center gap-2 bg-slate-600 hover:bg-slate-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300"
-                                },
-                                    React.createElement(RotateCcw, { className: "w-4 h-4" }),
-                                    "Restart Adventure"
-                                ),
-                                React.createElement('button', {
-                                    onClick: () => setShowCourseInfo(!showCourseInfo),
-                                    className: "flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300"
-                                },
-                                    React.createElement(BookOpen, { className: "w-4 h-4" }),
-                                    "Learn More About Our Course"
-                                ),
-                                React.createElement('button', {
-                                    onClick: () => setShowAdmin(!showAdmin),
-                                    className: "flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300"
-                                },
-                                    React.createElement(Settings, { className: "w-4 h-4" }),
-                                    "Content Editor"
-                                )
-                            )
-                        ),
-                        showAdmin && React.createElement(AdminPanel),
-                        showCourseInfo && React.createElement('div', { className: "mt-8 bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 p-8 shadow-2xl animate-in" },
-                            React.createElement('h2', { className: "text-3xl font-bold text-white mb-6 text-center" }, "🎓 Digital History Course"),
-                            React.createElement('div', { className: "grid md:grid-cols-3 gap-6 mb-6" },
-                                React.createElement('div', { className: "text-center p-4 bg-black/20 rounded-xl" },
-                                    React.createElement(Clock, { className: "w-8 h-8 text-purple-300 mx-auto mb-2" }),
-                                    React.createElement('h3', { className: "text-white font-semibold mb-1" }, "Interactive Learning"),
-                                    React.createElement('p', { className: "text-purple-200 text-sm" }, "Engage with history through immersive digital experiences")
-                                ),
-                                React.createElement('div', { className: "text-center p-4 bg-black/20 rounded-xl" },
-                                    React.createElement(Users, { className: "w-8 h-8 text-pink-300 mx-auto mb-2" }),
-                                    React.createElement('h3', { className: "text-white font-semibold mb-1" }, "Collaborative Research"),
-                                    React.createElement('p', { className: "text-pink-200 text-sm" }, "Work together on digital history projects and presentations")
-                                ),
-                                React.createElement('div', { className: "text-center p-4 bg-black/20 rounded-xl" },
-                                    React.createElement(BookOpen, { className: "w-8 h-8 text-cyan-300 mx-auto mb-2" }),
-                                    React.createElement('h3', { className: "text-white font-semibold mb-1" }, "Critical Thinking"),
-                                    React.createElement('p', { className: "text-cyan-200 text-sm" }, "Analyze historical sources and understand cause-and-effect relationships")
-                                )
-                            ),
-                            React.createElement('div', { className: "bg-black/30 rounded-xl p-6" },
-                                React.createElement('h3', { className: "text-2xl font-bold text-white mb-4" }, "What You'll Experience:"),
-                                React.createElement('ul', { className: "text-gray-200 space-y-2" },
-                                    React.createElement('li', { className: "flex items-start" },
-                                        React.createElement('span', { className: "text-purple-400 mr-2" }, "•"),
-                                        React.createElement('span', null, "Interactive historical simulations and decision-making scenarios")
-                                    ),
-                                    React.createElement('li', { className: "flex items-start" },
-                                        React.createElement('span', { className: "text-pink-400 mr-2" }, "•"),
-                                        React.createElement('span', null, "Digital archive research and primary source analysis")
-                                    ),
-                                    React.createElement('li', { className: "flex items-start" },
-                                        React.createElement('span', { className: "text-cyan-400 mr-2" }, "•"),
-                                        React.createElement('span', null, "Multimedia storytelling and historical narrative creation")
-                                    ),
-                                    React.createElement('li', { className: "flex items-start" },
-                                        React.createElement('span', { className: "text-amber-400 mr-2" }, "•"),
-                                        React.createElement('span', null, "Understanding how technology shapes our interpretation of the past")
-                                    )
-                                ),
-                                React.createElement('div', { className: "mt-6 text-center" },
-                                    React.createElement('p', { className: "text-purple-200 text-lg font-medium" }, "Ready to explore history in a whole new way?"),
-                                    React.createElement('p', { className: "text-gray-300 mt-2" }, "This adventure was just a small taste of what awaits in our Digital History course!")
-                                )
-                            )
-                        )
-                    )
-                )
-            );
+        // Game Scenes Data
+        const scenes = {
+            start: {
+                title: "Welcome to Digital History!",
+                image: "🏛️",
+                text: "Step into the shoes of historical figures and experience pivotal moments in American history. What's your name, time traveler?",
+                isNameInput: true
+            },
+            
+            timePortal: {
+                title: "The Time Portal Awaits",
+                image: "🌀",
+                text: "Ready, {playerName}? You stand before a swirling portal of time. Three critical moments in American history beckon. Each choice will test your understanding of historical context and consequences.",
+                choices: [
+                    { text: "1776 - Revolutionary War", action: "revolution" },
+                    { text: "1863 - Civil War", action: "civilwar" },
+                    { text: "1969 - Moon Landing", action: "moonlanding" }
+                ]
+            },
+            
+            revolution: {
+                title: "Valley Forge, Winter 1777-1778",
+                image: "❄️",
+                text: "You are a Continental Army soldier under General Washington. The winter is brutal, supplies are scarce, and morale is at its lowest. Many soldiers are deserting. What do you do?",
+                choices: [
+                    { text: "Stay and endure the hardship for the cause", action: "revolutionStay" },
+                    { text: "Desert and return home to your family", action: "revolutionLeave" },
+                    { text: "Try to rally other soldiers with speeches", action: "revolutionRally" }
+                ]
+            },
+            
+            revolutionStay: {
+                title: "The Patriot's Resolve",
+                image: "🇺🇸",
+                text: "Your decision to stay proved crucial. Though 2,500 soldiers died that winter, the army that emerged was disciplined and united. Your sacrifice contributed to eventual victory at Yorktown. Historical impact: HIGH",
+                isEnding: true,
+                historicalNote: "About 2,000 soldiers deserted Valley Forge, but those who stayed formed the backbone of Washington's eventual victory."
+            },
+            
+            revolutionLeave: {
+                title: "The Deserter's Dilemma",
+                image: "🏠",
+                text: "You return home safely, but news reaches you of the army's transformation at Valley Forge. Many who stayed became heroes of independence. You live with wondering 'what if?' Historical impact: LOW",
+                isEnding: true,
+                historicalNote: "Desertion was common and understandable, but those who endured Valley Forge became the core of America's victory."
+            },
+            
+            revolutionRally: {
+                title: "The Inspirational Leader",
+                image: "📜",
+                text: "Your speeches help maintain morale during the darkest hours. You become a sergeant and help train new recruits using Baron von Steuben's methods. Your leadership saves lives and wins battles. Historical impact: HIGH",
+                isEnding: true,
+                historicalNote: "Leadership at all levels was crucial to the Continental Army's survival and eventual professionalization."
+            },
+            
+            civilwar: {
+                title: "Gettysburg, July 2, 1863",
+                image: "⚔️",
+                text: "You are a Union officer watching Confederate forces position for Pickett's Charge. You have intelligence that could change the battle's outcome. General Meade is nearby. What do you do?",
+                choices: [
+                    { text: "Immediately inform General Meade", action: "civilwarInform" },
+                    { text: "Position your troops defensively first", action: "civilwarDefend" },
+                    { text: "Send scouts to confirm the intelligence", action: "civilwarScout" }
+                ]
+            },
+            
+            civilwarInform: {
+                title: "The Strategic Mind",
+                image: "🎖️",
+                text: "Your quick thinking allows Meade to better position artillery and infantry. Pickett's Charge fails more decisively, shortening the war by months and saving thousands of lives. Historical impact: HIGH",
+                isEnding: true,
+                historicalNote: "Quick decision-making and intelligence sharing were often the difference between victory and defeat in Civil War battles."
+            },
+            
+            civilwarDefend: {
+                title: "The Tactical Officer",
+                image: "🛡️",
+                text: "Your defensive preparations save your regiment, but the delayed intelligence prevents optimal positioning. The battle is won, but at a higher cost in lives. Historical impact: MEDIUM",
+                isEnding: true,
+                historicalNote: "Balancing immediate unit safety with strategic needs was a constant challenge for Civil War officers."
+            },
+            
+            civilwarScout: {
+                title: "The Cautious Commander",
+                image: "🔍",
+                text: "Your scouts confirm the intelligence, but precious time is lost. The battle unfolds as historically recorded. Your caution saved you from potential error but missed an opportunity. Historical impact: LOW",
+                isEnding: true,
+                historicalNote: "The fog of war often forced commanders to act on incomplete information, making boldness sometimes more valuable than caution."
+            },
+            
+            moonlanding: {
+                title: "Mission Control, July 20, 1969",
+                image: "🚀",
+                text: "You're a NASA engineer monitoring Apollo 11's descent. The computer is overloaded with alarms, fuel is running dangerously low, and Neil Armstrong must land manually. What's your advice?",
+                choices: [
+                    { text: "Recommend immediate abort", action: "moonAbort" },
+                    { text: "Trust Armstrong's piloting skills", action: "moonTrust" },
+                    { text: "Guide him to the nearest safe spot", action: "moonGuide" }
+                ]
+            },
+            
+            moonAbort: {
+                title: "The Safety Protocol",
+                image: "⚠️",
+                text: "You follow safety protocols, but Armstrong continues the landing anyway. The mission succeeds, but your overcaution is noted. Sometimes historical moments require calculated risks. Historical impact: LOW",
+                isEnding: true,
+                historicalNote: "The actual mission controllers chose to trust Armstrong's skills, leading to the historic landing with just 25 seconds of fuel remaining."
+            },
+            
+            moonTrust: {
+                title: "The Leap of Faith",
+                image: "🌙",
+                text: "Your confidence in Armstrong proves correct. He lands with seconds to spare, achieving humanity's greatest adventure. Your trust in human skill over caution helped make history. Historical impact: HIGH",
+                isEnding: true,
+                historicalNote: "Mission Control's trust in Armstrong's abilities was crucial to the successful landing that captivated the world."
+            },
+            
+            moonGuide: {
+                title: "The Navigator",
+                image: "🧭",
+                text: "Your guidance helps Armstrong find a safe landing spot, but the drama and achievement feel diminished by over-management. Sometimes heroes need space to make history. Historical impact: MEDIUM",
+                isEnding: true,
+                historicalNote: "The balance between support and independence was crucial in allowing Armstrong to make split-second decisions that ensured success."
+            }
         };
 
-        ReactDOM.render(React.createElement(HistoryAdventureGame), document.getElementById('root'));
-    </script>
-</body>
-</html>
+        // Game Functions
+        function updateScene() {
+            const scene = scenes[currentScene];
+            if (!scene) return;
+
+            // Update image
+            const imageEl = document.getElementById('sceneImage');
+            if (scene.image && (scene.image.startsWith('http') || scene.image.startsWith('data:'))) {
+                imageEl.innerHTML = `<img src="${scene.image}" alt="${scene.title}" onerror="this.style.display='none'; this.nextSibling.style.display='block';">`;
+            } else {
+                imageEl.textContent = scene.image;
+            }
+
+            // Update title and text
+            document.getElementById('sceneTitle').textContent = scene.title;
+            let text = scene.text;
+            if (text.includes('{playerName}')) {
+                text = text.replace('{playerName}', playerName);
+            }
+            document.getElementById('sceneText').textContent = text;
+
+            // Handle name input
+            const nameInput = document.getElementById('nameInput');
+            const actionButton = document.getElementById('actionButton');
+            if (scene.isNameInput) {
+                nameInput.classList.remove('hidden');
+                actionButton.classList.remove('hidden');
+                document.getElementById('playerName').focus();
+            } else {
+                nameInput.classList.add('hidden');
+                actionButton.classList.add('hidden');
+            }
+
+            // Handle choices
+            const choicesEl = document.getElementById('choices');
+            choicesEl.innerHTML = '';
+            if (scene.choices) {
+                scene.choices.forEach(choice => {
+                    const button = document.createElement('button');
+                    button.className = 'choice-button';
+                    button.innerHTML = `<span>${choice.text}</span><span>›</span>`;
+                    button.onclick = () => goToScene(choice.action);
+                    choicesEl.appendChild(button);
+                });
+            }
+
+            // Handle historical note
+            const noteEl = document.getElementById('historicalNote');
+            const noteText = document.getElementById('historicalText');
+            if (scene.historicalNote) {
+                noteText.textContent = scene.historicalNote;
+                noteEl.classList.remove('hidden');
+            } else {
+                noteEl.classList.add('hidden');
+            }
+        }
+
+        function goToScene(sceneId) {
+            currentScene = sceneId;
+            updateScene();
+        }
+
+        function startGame() {
+            const nameEl = document.getElementById('playerName');
+            playerName = nameEl.value.trim();
+            if (playerName) {
+                goToScene('timePortal');
+            }
+        }
+
+        function resetGame() {
+            currentScene = 'start';
+            playerName = '';
+            document.getElementById('playerName').value = '';
+            updateScene();
+        }
+
+        function toggleCourseInfo() {
+            const courseInfo = document.getElementById('courseInfo');
+            showCourseInfo = !showCourseInfo;
+            if (showCourseInfo) {
+                courseInfo.classList.remove('hidden');
+            } else {
+                courseInfo.classList.add('hidden');
+            }
+        }
+
+        function toggleAdmin() {
+            const adminPanel = document.getElementById('adminPanel');
+            showAdmin = !showAdmin;
+            if (showAdmin) {
+                adminPanel.classList.remove('hidden');
+                renderSceneGrid();
+            } else {
+                adminPanel.classList.add('hidden');
+            }
+        }
+
+        function renderSceneGrid() {
+            const grid = document.getElementById('sceneGrid');
+            grid.innerHTML = '';
+            
+            Object.entries(scenes).forEach(([sceneId, scene]) => {
+                const card = document.createElement('div');
